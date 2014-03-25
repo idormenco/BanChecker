@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Documents;
 using BanCheckerWPF.Classes;
 using Action = BanCheckerWPF.Classes.Action;
 using Expression = BanCheckerWPF.Classes.Expression;
@@ -13,14 +15,15 @@ namespace BanCheckerWPF
     public partial class MainWindow : Window
     {
         public ObservableCollection<Expression> InitialAssumtionsCollection { get; set; }
-        public ObservableCollection<Expression> ProtocolDefinitionCollection { get; set; }
+        public ObservableCollection<Expression> AnnotatedProtocolCollection { get; set; }
+        public List<Expression> WorkingList =new List<Expression>();
         public MainWindow()
         {
             InitialAssumtionsCollection = new ObservableCollection<Expression>();
-            InitialAssumtionsCollection.Add(new Expression("P", new Belives(), new Nonce("Na")));
-            ProtocolDefinitionCollection = new ObservableCollection<Expression>();
+            AnnotatedProtocolCollection = new ObservableCollection<Expression>();
             InitializeComponent();
             InitialAssumtions.DataContext = InitialAssumtionsCollection;
+            AnnotatedProtocol.DataContext = AnnotatedProtocolCollection;
         }
 
         public Action ParseAction(string str)
@@ -148,11 +151,6 @@ namespace BanCheckerWPF
             }
             return mes;
         }
-
-        public object ParseObject(string s)
-        {
-            return null;
-        }
         public Fresh ParseFresh(string s)
         {
             if (s == "") return null;
@@ -278,7 +276,56 @@ namespace BanCheckerWPF
 
         private void AddProtocolStep_OnClick(object sender, RoutedEventArgs e)
         {
+            var expression = new Expression();
+            string text = NewProtocolStep.Text;
+            var split = text.Split(' ');
+            expression.Entity = split[0].ToUpper();
+            expression.Action = ParseAction(split[1]);
+            if (expression.Action == null)
+            {
+                MessageBox.Show("Input invalid");
+            }
+            else
+            {
+                object x;
+                switch (split[2].ToLower())
+                {
+                    case "em":
+                        x = ParseEncryptedMessage(text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
+                        break;
+                    case "exp":
+                        x = ParseExpression(text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
+                        break;
+                    case "fr":
+                        x = ParseFresh(text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
+                        break;
+                    case "key":
+                        x = ParseKey(text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
+                        break;
+                    case "mess":
+                        x = ParseMessage(text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
+                        break;
+                    case "non":
+                        x = ParseNonce(text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
+                        break;
+                    case "pk":
+                        x = ParsePublicKey(text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
+                        break;
+                    default:
+                        x = null;
+                        break;
+                }
+                if (x == null)
+                {
+                    MessageBox.Show("Input invalid");
+                }
+                else
+                {
+                    expression.X = x;
+                    AnnotatedProtocolCollection.Add(expression);
+                }
 
+            }
         }
 
         private void DeleteProtocolStep_OnClick(object sender, RoutedEventArgs e)
@@ -286,7 +333,23 @@ namespace BanCheckerWPF
             int selectedIndex = AnnotatedProtocol.SelectedIndex;
             if (selectedIndex >= 0)
             {
-                ProtocolDefinitionCollection.RemoveAt(selectedIndex);
+                AnnotatedProtocolCollection.RemoveAt(selectedIndex);
+            }
+        }
+
+
+        private void Work_OnClick(object sender, RoutedEventArgs e)
+        {
+            WorkingList.Clear();
+            if (InitialAssumtionsCollection.Count == 0 || AnnotatedProtocolCollection.Count == 0)
+            {
+                MessageBox.Show("Insert annotated protocol and initial belives");
+            }
+            else
+            {
+                WorkingList.AddRange(InitialAssumtionsCollection);
+                WorkingList.AddRange(AnnotatedProtocolCollection);
+                MessageBox.Show(WorkingList.Count.ToString());
             }
         }
     }

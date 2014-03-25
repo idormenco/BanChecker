@@ -1,7 +1,8 @@
 ﻿<Window x:Class="BanCheckerWPF.MainWindow"
-        
+        BorderThickness="0"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        ResizeMode="NoResize"
         Title="BAN Checker Dormenco-Manoli" Height="600" Width="800">
     <Grid>
         <Grid.RowDefinitions>
@@ -42,11 +43,21 @@
                     </DataGrid.Columns>
                 </DataGrid>
                 <StackPanel Orientation="Horizontal">
-                    <TextBox Width="285" Height="30" Margin="2" BorderBrush="DimGray" Name="NewProtocolStep"/>
+                    <TextBox Width="280" Height="30" Margin="2" BorderBrush="DimGray" Name="NewProtocolStep"/>
                     <Button Name="AddProtocolStep" Height="30" Width="50" Margin="0 0 0 0" Click="AddProtocolStep_OnClick">Add</Button>
-                    <Button Name="DeleteProtocolStep" Height="30" Width="50" Margin="5 0 0 0" Click="DeleteProtocolStep_OnClick">Delete</Button>
+                    <Button Name="DeleteProtocolStep" Height="30" Width="45" Margin="5 0 0 0" Click="DeleteProtocolStep_OnClick">Delete</Button>
                 </StackPanel>
             </StackPanel>
         </Border>
+        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="690"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <RichTextBox Name="Output" Grid.Column="0" IsReadOnly="True" Margin="10,0,0,50" VerticalScrollBarVisibility="Visible"/>
+            <Button Height="30" Name="Work" Grid.Column="1" Margin="5,220,20,50" Click="Work_OnClick">Work</Button>
+
+        </Grid>
+
     </Grid>
 </Window>
