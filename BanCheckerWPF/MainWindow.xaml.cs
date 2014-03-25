@@ -16,7 +16,9 @@ namespace BanCheckerWPF
     {
         public ObservableCollection<Expression> InitialAssumtionsCollection { get; set; }
         public ObservableCollection<Expression> AnnotatedProtocolCollection { get; set; }
-        public List<Expression> WorkingList =new List<Expression>();
+        public BanRules BanRules = new BanRules();
+        public ExpressionComparer Ec = new ExpressionComparer();
+        public HashSet<Expression> WorkingList = new HashSet<Expression>();        
         public MainWindow()
         {
             InitialAssumtionsCollection = new ObservableCollection<Expression>();
@@ -347,9 +349,18 @@ namespace BanCheckerWPF
             }
             else
             {
-                WorkingList.AddRange(InitialAssumtionsCollection);
-                WorkingList.AddRange(AnnotatedProtocolCollection);
-                MessageBox.Show(WorkingList.Count.ToString());
+                foreach (var expression in InitialAssumtionsCollection)
+                {
+                    WorkingList.Add(expression);
+                }
+                foreach (var expression in AnnotatedProtocolCollection)
+                {
+                    WorkingList.Add(expression);
+                }
+                while (true)
+                {
+                    
+                }
             }
         }
     }

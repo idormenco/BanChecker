@@ -3,7 +3,7 @@ using BanCheckerWPF.Classes;
 
 namespace BanCheckerWPF
 {
-    class BanRules
+    public class BanRules
     {
         public List<Expression> ApplyRule(Expression expression1, Expression expression2)
         {
