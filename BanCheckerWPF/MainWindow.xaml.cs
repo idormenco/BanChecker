@@ -59,53 +59,59 @@ namespace BanCheckerWPF
         {
             var expression = new Expression();
             string text = NewAssumtion.Text;
-            if (text == "") MessageBox.Show("introduceti text!!");
+            if (text == "") MessageBox.Show("Please insert an assumtion!");
             else
             {
                 var split = text.Split(' ');
+                // if text is composed from less than 3 tokens displays an error message and exit function
+                if (split.Length < 2)
+                {
+                    MessageBox.Show("Please provide an valid input!");
+                    return;
+                }
                 expression.Entity = split[0].ToUpper();
                 expression.Action = ParseAction(split[1]);
                 if (expression.Action == null)
                 {
-                    MessageBox.Show("Input invalid");
+                    MessageBox.Show("Please insert a valid action");
                 }
                 else
                 {
                     object x;
+                    
+                    //getting the start position of object
+                    int objectStartPosition = split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1;
+                    
+                    //checking if object exists.
+                    //if not exit with user warning.
+                    if (objectStartPosition > text.Length)
+                    {
+                        MessageBox.Show("Please insert a valid input!");
+                        return;
+                    }
+                    String objectText = text.Substring(objectStartPosition);
                     switch (split[2].ToLower())
                     {
                         case "em":
-                            x =
-                                ParseEncryptedMessage(
-                                    text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
+                            x = ParseEncryptedMessage(objectText);
                             break;
                         case "exp":
-                            x =
-                                ParseExpression(
-                                    text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
+                            x = ParseExpression(objectText);
                             break;
                         case "fr":
-                            x =
-                                ParseFresh(
-                                    text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
+                            x = ParseFresh(objectText);
                             break;
                         case "key":
-                            x = ParseKey(text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
+                            x = ParseKey(objectText);
                             break;
                         case "mess":
-                            x =
-                                ParseMessage(
-                                    text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
+                            x = ParseMessage(objectText);
                             break;
                         case "non":
-                            x =
-                                ParseNonce(
-                                    text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
+                            x = ParseNonce(objectText);
                             break;
                         case "pk":
-                            x =
-                                ParsePublicKey(
-                                    text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
+                            x = ParsePublicKey(objectText);
                             break;
                         default:
                             x = null;
@@ -113,7 +119,7 @@ namespace BanCheckerWPF
                     }
                     if (x == null)
                     {
-                        MessageBox.Show("Input invalid");
+                        MessageBox.Show("Please provide an valid input!");
                     }
                     else
                     {
@@ -128,14 +134,14 @@ namespace BanCheckerWPF
         private Key ParseKey(string s)
         {
             var split = s.Split(' ');
-            if (split[0] == "" || split[1] == "" || split[2] == "") return null;
+            if (split.Length < 2 || split[0] == "" || split[1] == "" || split[2] == "") return null;
             return new Key(split[0], split[1].ToUpper(), split[2].ToUpper());
         }
 
         public PublicKey ParsePublicKey(string s)
         {
             var split = s.Split(' ');
-            if (split[0] == "" || split[1] == "") return null;
+            if (split.Length < 1 || split[0] == "" || split[1] == "") return null;
             return new PublicKey(split[0].ToUpper(), split[1]);
         }
 
@@ -144,9 +150,10 @@ namespace BanCheckerWPF
             if (s == "") return null;
             return new Nonce(s);
         }
-
+        
         public Message ParseMessage(string s)
         {
+            //TODO: add verifications
             if (s == "") return null;
             string[] strings = s.Split(',');
             var mes = new Message();
@@ -154,22 +161,27 @@ namespace BanCheckerWPF
             {
                 object x;
                 var split2 = s1.Split(' ');
+
+                if (split2[0].Length + 1 > s1.Length) return null;
+
+                string messageText = s1.Substring(split2[0].Length + 1);
+
                 switch (split2[0].ToLower())
                 {
                     case "exp":
-                        x = ParseExpression(s1.Substring(split2[0].Length + 1));
+                        x = ParseExpression(messageText);
                         break;
                     case "fr":
-                        x = ParseFresh(s1.Substring(split2[0].Length + 1));
+                        x = ParseFresh(messageText);
                         break;
                     case "key":
-                        x = ParseKey(s1.Substring(split2[0].Length + 1));
+                        x = ParseKey(messageText);
                         break;
                     case "non":
-                        x = ParseNonce(s1.Substring(split2[0].Length + 1));
+                        x = ParseNonce(messageText);
                         break;
                     case "pk":
-                        x = ParsePublicKey(s1.Substring(split2[0].Length + 1));
+                        x = ParsePublicKey(messageText);
                         break;
                     default:
                         x = null;
@@ -185,22 +197,24 @@ namespace BanCheckerWPF
             if (s == "") return null;
             object x;
             var split = s.Split(' ');
+            if (split.Length == 0 || (split[0].Length + 1 > s.Length)) return null;
+            String freshText = s.Substring(split[0].Length + 1);
             switch (split[0].ToLower())
             {
                 case "em":
-                    x = ParseEncryptedMessage(s.Substring(split[0].Length + 1));
+                    x = ParseEncryptedMessage(freshText);
                     break;
                 case "key":
-                    x = ParseKey(s.Substring(split[0].Length + 1));
+                    x = ParseKey(freshText);
                     break;
                 case "non":
-                    x = ParseNonce(s.Substring(split[0].Length + 1));
+                    x = ParseNonce(freshText);
                     break;
                 case "pk":
-                    x = ParsePublicKey(s.Substring(split[0].Length + 1));
+                    x = ParsePublicKey(freshText);
                     break;
                 case "mess":
-                    x = ParseMessage(s.Substring(split[0].Length + 1));
+                    x = ParseMessage(freshText);
                     break;
                 default:
                     x = null;
@@ -215,28 +229,31 @@ namespace BanCheckerWPF
             if (s == "") return null;
             Expression e = new Expression();
             string[] split = s.Split(' ');
+            int expressionLength = split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1;
+            if (split.Length < 3 || expressionLength > s.Length) return null;
             e.Entity = split[0].ToUpper();
             e.Action = ParseAction(split[1]);
             object x;
+            String expressionContent = s.Substring(expressionLength);
             switch (split[2].ToLower())
             {
                 case "em":
-                    x = ParseEncryptedMessage(s.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
+                    x = ParseEncryptedMessage(expressionContent);
                     break;
                 case "fr":
-                    x = ParseFresh(s.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
+                    x = ParseFresh(expressionContent);
                     break;
                 case "key":
-                    x = ParseKey(s.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
+                    x = ParseKey(expressionContent);
                     break;
                 case "mess":
-                    x = ParseMessage(s.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
+                    x = ParseMessage(expressionContent);
                     break;
                 case "non":
-                    x = ParseNonce(s.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
+                    x = ParseNonce(expressionContent);
                     break;
                 case "pk":
-                    x = ParsePublicKey(s.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
+                    x = ParsePublicKey(expressionContent);
                     break;
                 default:
                     x = null;
