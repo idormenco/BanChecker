@@ -1,0 +1,13 @@
+a belives key kAS a s
+b belives key kBS b s
+a belives exp s controls key kAB A B
+b belives exp s controls key kAB A B
+a belives exp s controls fr key kAB A B
+a belives fr non na
+b belives fr non nb
+
+a received em non na,key kAB A B,fr key kAB A B,em key kAB A B kBS kAS
+b received em key kAB A B kBS
+b belives fr key kAB A B
+a received em non nb,key kAB A B kAB
+b received em non nb,key kAB A B kAB

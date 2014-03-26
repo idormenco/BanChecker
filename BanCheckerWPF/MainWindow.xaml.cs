@@ -26,11 +26,11 @@ namespace BanCheckerWPF
             InitialAssumtionsCollection = new ObservableCollection<Expression>();
             AnnotatedProtocolCollection = new ObservableCollection<Expression>();
             InitialAssumtionsCollection.Add(new Expression("A",new Belives(), new Key("kAS","A","S")));
-            InitialAssumtionsCollection.Add(new Expression("B", new Belives(), new Key("kAS", "B", "S")));
-            InitialAssumtionsCollection.Add(new Expression("A", new Belives(), new Expression("S",new Controls(), new Key("k","A","B"))));
-            InitialAssumtionsCollection.Add(new Expression("B", new Belives(), new Expression("S", new Controls(), new Key("k", "A", "B"))));
-            InitialAssumtionsCollection.Add(new Expression("A", new Belives(), new Expression("S", new Controls(), new Fresh(new Key("k", "A", "B")))));
-            InitialAssumtionsCollection.Add(new Expression("B", new Belives(), new Expression("S", new Controls(), new Fresh(new Key("k", "A", "B")))));
+            InitialAssumtionsCollection.Add(new Expression("B", new Belives(), new Key("kBS", "B", "S")));
+            InitialAssumtionsCollection.Add(new Expression("A", new Belives(), new Expression("S",new Controls(), new Key("kAB","A","B"))));
+            InitialAssumtionsCollection.Add(new Expression("B", new Belives(), new Expression("S", new Controls(), new Key("kAB", "A", "B"))));
+            InitialAssumtionsCollection.Add(new Expression("A", new Belives(), new Expression("S", new Controls(), new Fresh(new Key("kAB", "A", "B")))));
+            InitialAssumtionsCollection.Add(new Expression("B", new Belives(), new Expression("S", new Controls(), new Fresh(new Key("kAB", "A", "B")))));
             InitialAssumtionsCollection.Add(new Expression("A", new Belives(), new Fresh(new Nonce("na"))));
             InitialAssumtionsCollection.Add(new Expression("B", new Belives(), new Fresh(new Nonce("nb"))));
             WorkingList=new HashSet<Expression>(Ec);
@@ -310,53 +310,69 @@ namespace BanCheckerWPF
         {
             var expression = new Expression();
             string text = NewProtocolStep.Text;
-            var split = text.Split(' ');
-            expression.Entity = split[0].ToUpper();
-            expression.Action = ParseAction(split[1]);
-            if (expression.Action == null)
-            {
-                MessageBox.Show("Input invalid");
-            }
+            if (text == "") MessageBox.Show("Completati toate campurile!!");
             else
             {
-                object x;
-                switch (split[2].ToLower())
-                {
-                    case "em":
-                        x = ParseEncryptedMessage(text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
-                        break;
-                    case "exp":
-                        x = ParseExpression(text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
-                        break;
-                    case "fr":
-                        x = ParseFresh(text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
-                        break;
-                    case "key":
-                        x = ParseKey(text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
-                        break;
-                    case "mess":
-                        x = ParseMessage(text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
-                        break;
-                    case "non":
-                        x = ParseNonce(text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
-                        break;
-                    case "pk":
-                        x = ParsePublicKey(text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
-                        break;
-                    default:
-                        x = null;
-                        break;
-                }
-                if (x == null)
+                var split = text.Split(' ');
+                expression.Entity = split[0].ToUpper();
+                expression.Action = ParseAction(split[1]);
+                if (expression.Action == null)
                 {
                     MessageBox.Show("Input invalid");
                 }
                 else
                 {
-                    expression.X = x;
-                    AnnotatedProtocolCollection.Add(expression);
-                }
+                    object x;
+                    switch (split[2].ToLower())
+                    {
+                        case "em":
+                            x =
+                                ParseEncryptedMessage(
+                                    text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
+                            break;
+                        case "exp":
+                            x =
+                                ParseExpression(
+                                    text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
+                            break;
+                        case "fr":
+                            x =
+                                ParseFresh(
+                                    text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
+                            break;
+                        case "key":
+                            x = ParseKey(text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
+                            break;
+                        case "mess":
+                            x =
+                                ParseMessage(
+                                    text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
+                            break;
+                        case "non":
+                            x =
+                                ParseNonce(
+                                    text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
+                            break;
+                        case "pk":
+                            x =
+                                ParsePublicKey(
+                                    text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
+                            break;
+                        default:
+                            x = null;
+                            break;
+                    }
+                    if (x == null)
+                    {
+                        MessageBox.Show("Input invalid");
+                    }
+                    else
+                    {
+                        expression.X = x;
+                        AnnotatedProtocolCollection.Add(expression);
+                    }
 
+                }
             }
         }
 
@@ -372,7 +388,7 @@ namespace BanCheckerWPF
 
         private void Work_OnClick(object sender, RoutedEventArgs e)
         {
-            //WorkingList.Clear();
+            WorkingList.Clear();
             Output.Text = "";
             if (InitialAssumtionsCollection.Count == 0 || AnnotatedProtocolCollection.Count == 0)
             {
@@ -384,7 +400,7 @@ namespace BanCheckerWPF
                 {
                     WorkingList.Add(expression);
                 }
-                MessageBox.Show(WorkingList.Count.ToString());
+                //MessageBox.Show(WorkingList.Count.ToString());
                 foreach (var expression in AnnotatedProtocolCollection)
                 {
                     WorkingList.Add(expression);
@@ -428,18 +444,17 @@ namespace BanCheckerWPF
                                 }   
                             }
                         }
-                        foreach (var expression1 in WorkingList)
-                        {
-                            Output.Text += expression1.ToString() + "\n";
-                        }
-                        Thread.Sleep(1000);
-                        break;
+
                         if (!check)
                         {
                             break;
                         }
                     }
-
+                    Output.Text = "";
+                    foreach (var expression1 in WorkingList)
+                    {
+                        Output.Text += expression1 + "\n";
+                    }
 
                 }
 

@@ -25,10 +25,10 @@ namespace BanCheckerWPF
             {
                 result.AddRange(BeliefConjuncatenation(expression1, expression2));
             }
-            if (ReceivingRule(expression1, expression2) != null)
-            {
-                result.AddRange(ReceivingRule(expression1, expression2));
-            }
+            //if (ReceivingRule(expression1, expression2) != null)
+            //{
+            //    result.AddRange(ReceivingRule(expression1, expression2));
+            //}
             if (FreshnessConjuncatenation(expression1, expression2) != null)
             {
                 result.Add(FreshnessConjuncatenation(expression1, expression2));
@@ -174,6 +174,41 @@ namespace BanCheckerWPF
                     if (o.GetType() == typeof(Fresh))
                     {
                         return new Expression(e1.Entity, e1.Action, new Fresh(new Message(message,true)));
+                    }
+                }
+            }
+            if (e1.X.GetType()==typeof(Expression)&&((Expression)e1.X).X.GetType()==typeof(Message))
+            {
+                var message=((Message) (((Expression) e1.X).X)).MessageList;
+                foreach (var o in message)
+                {
+                    if (o.GetType() == typeof(Fresh))
+                    {
+                        return new Expression(e1.Entity, new Belives(), new Fresh(new Message(message, true)));
+                    }
+                }
+            }
+            if (e2 != null && (e1.X.GetType() == typeof(Expression) && ((Expression)e1.X).X.GetType() == typeof(Message)&&
+                               e2.Entity==e1.Entity&&e2.X.GetType()==typeof(Fresh)))
+            {
+                var message = ((Message)(((Expression)e1.X).X)).MessageList;
+                foreach (var o in message)
+                {
+                    if (o.ToString()==((Fresh)e2.X).Value.ToString())
+                    {
+                        return new Expression(e1.Entity, new Belives(), new Fresh(new Message(message, true)));
+                    }
+                }
+            }
+            if (e2 != null && (e2.X.GetType() == typeof(Expression) && ((Expression)e2.X).X.GetType() == typeof(Message) &&
+                               e2.Entity == e1.Entity && e1.X.GetType() == typeof(Fresh)))
+            {
+                var message = ((Message)(((Expression)e2.X).X)).MessageList;
+                foreach (var o in message)
+                {
+                    if (o.ToString() == ((Fresh)e1.X).Value.ToString())
+                    {
+                        return new Expression(e2.Entity, new Belives(), new Fresh(new Message(message, true)));
                     }
                 }
             }
