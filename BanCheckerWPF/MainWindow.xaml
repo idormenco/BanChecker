@@ -54,7 +54,7 @@
                 <ColumnDefinition Width="690"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <RichTextBox Name="Output" Grid.Column="0" IsReadOnly="True" Margin="10,0,0,50" VerticalScrollBarVisibility="Visible"/>
+            <TextBox Name="Output" Grid.Column="0" IsReadOnly="True" Margin="10,0,0,50" VerticalScrollBarVisibility="Visible"/>
             <Button Height="30" Name="Work" Grid.Column="1" Margin="5,220,20,50" Click="Work_OnClick">Work</Button>
 
         </Grid>
