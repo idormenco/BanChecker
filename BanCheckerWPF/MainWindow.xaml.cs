@@ -64,7 +64,7 @@ namespace BanCheckerWPF
             {
                 var split = text.Split(' ');
                 // if text is composed from less than 3 tokens displays an error message and exit function
-                if (split.Length < 2)
+                if (split.Length < 3)
                 {
                     MessageBox.Show("Please provide an valid input!");
                     return;
@@ -134,14 +134,14 @@ namespace BanCheckerWPF
         private Key ParseKey(string s)
         {
             var split = s.Split(' ');
-            if (split.Length < 2 || split[0] == "" || split[1] == "" || split[2] == "") return null;
+            if (split.Length < 3 || split[0] == "" || split[1] == "" || split[2] == "") return null;
             return new Key(split[0], split[1].ToUpper(), split[2].ToUpper());
         }
 
         public PublicKey ParsePublicKey(string s)
         {
             var split = s.Split(' ');
-            if (split.Length < 1 || split[0] == "" || split[1] == "") return null;
+            if (split.Length < 2 || split[0] == "" || split[1] == "") return null;
             return new PublicKey(split[0].ToUpper(), split[1]);
         }
 
@@ -281,6 +281,8 @@ namespace BanCheckerWPF
             {
                 object x;
                 var split2 = s1.Split(' ');
+                if (split2.Length == 1)
+                    return null;
                 switch (split2[0].ToLower())
                 {
                     case "exp":
@@ -331,6 +333,14 @@ namespace BanCheckerWPF
             else
             {
                 var split = text.Split(' ');
+                int objectStartPosition = split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1;
+                if (objectStartPosition > text.Length)
+                {
+                    MessageBox.Show("Please provide a valid input!");
+                    return;
+                }
+
+                String objectText = text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1);
                 expression.Entity = split[0].ToUpper();
                 expression.Action = ParseAction(split[1]);
                 if (expression.Action == null)
@@ -343,37 +353,25 @@ namespace BanCheckerWPF
                     switch (split[2].ToLower())
                     {
                         case "em":
-                            x =
-                                ParseEncryptedMessage(
-                                    text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
+                            x = ParseEncryptedMessage(objectText);
                             break;
                         case "exp":
-                            x =
-                                ParseExpression(
-                                    text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
+                            x = ParseExpression(objectText);
                             break;
                         case "fr":
-                            x =
-                                ParseFresh(
-                                    text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
+                            x = ParseFresh(objectText);
                             break;
                         case "key":
-                            x = ParseKey(text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
+                            x = ParseKey(objectText);
                             break;
                         case "mess":
-                            x =
-                                ParseMessage(
-                                    text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
+                            x = ParseMessage(objectText);
                             break;
                         case "non":
-                            x =
-                                ParseNonce(
-                                    text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
+                            x = ParseNonce(objectText);
                             break;
                         case "pk":
-                            x =
-                                ParsePublicKey(
-                                    text.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1));
+                            x = ParsePublicKey(objectText);
                             break;
                         default:
                             x = null;
