@@ -3,6 +3,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         ResizeMode="NoResize"
+        Icon="icon.ico"
         Title="BAN Checker Dormenco-Manoli" Height="600" Width="800">
     <Grid>
         <Grid.RowDefinitions>
