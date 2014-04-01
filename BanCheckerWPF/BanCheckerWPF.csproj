@@ -88,6 +88,7 @@
     <Compile Include="Classes\Message.cs" />
     <Compile Include="Classes\Nonce.cs" />
     <Compile Include="Classes\PublicKey.cs" />
+    <Compile Include="Classes\Step.cs" />
     <Compile Include="Classes\TimeStamp.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
