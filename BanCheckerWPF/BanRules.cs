@@ -56,7 +56,7 @@ namespace BanCheckerWPF
                 var message = new Message(((EncryptedMessage)(e1.X)).MessageList, false);
                 var expresion = new Expression(((Key)(e2.X)).GetOtherEntity(e2.Entity), new Said(), message);
                 result.Add(new Expression(e2.Entity, new Belives(), expresion));
-                result.Add(new Expression(e2.Entity,new Received(), message));
+                result.Add(new Expression(e2.Entity, new Received(), message));
             }
 
             if (e2 != null && (e1 != null && (e1.Action.GetType() == typeof(Belives) && e1.X.GetType() == typeof(PublicKey)
@@ -153,7 +153,7 @@ namespace BanCheckerWPF
             if (e2 == null && e1.Action.GetType() == typeof(Received) && e1.X.GetType() == typeof(Message))
             {
                 var list = new List<Expression>();
-                List<object> messageList = ((Message) e1.X).MessageList;
+                List<object> messageList = ((Message)e1.X).MessageList;
                 foreach (var o in messageList)
                 {
                     var exp = new Expression(e1.Entity, new Received(), o);
@@ -166,20 +166,20 @@ namespace BanCheckerWPF
 
         public Expression FreshnessConjuncatenation(Expression e1, Expression e2)
         {
-            if (e2==null && e1.Action.GetType() == typeof(Belives) && e1.X.GetType() == typeof(Message) )
+            if (e2 == null && e1.Action.GetType() == typeof(Belives) && e1.X.GetType() == typeof(Message))
             {
                 var message = ((Message)(e1.X)).MessageList;
                 foreach (var o in message)
                 {
                     if (o.GetType() == typeof(Fresh))
                     {
-                        return new Expression(e1.Entity, e1.Action, new Fresh(new Message(message,true)));
+                        return new Expression(e1.Entity, e1.Action, new Fresh(new Message(message, true)));
                     }
                 }
             }
-            if (e1.X.GetType()==typeof(Expression)&&((Expression)e1.X).X.GetType()==typeof(Message))
+            if (e1.X.GetType() == typeof(Expression) && ((Expression)e1.X).X.GetType() == typeof(Message))
             {
-                var message=((Message) (((Expression) e1.X).X)).MessageList;
+                var message = ((Message)(((Expression)e1.X).X)).MessageList;
                 foreach (var o in message)
                 {
                     if (o.GetType() == typeof(Fresh))
@@ -188,13 +188,13 @@ namespace BanCheckerWPF
                     }
                 }
             }
-            if (e2 != null && (e1.X.GetType() == typeof(Expression) && ((Expression)e1.X).X.GetType() == typeof(Message)&&
-                               e2.Entity==e1.Entity&&e2.X.GetType()==typeof(Fresh)))
+            if (e2 != null && (e1.X.GetType() == typeof(Expression) && ((Expression)e1.X).X.GetType() == typeof(Message) &&
+                               e2.Entity == e1.Entity && e2.X.GetType() == typeof(Fresh)))
             {
                 var message = ((Message)(((Expression)e1.X).X)).MessageList;
                 foreach (var o in message)
                 {
-                    if (o.ToString()==((Fresh)e2.X).Value.ToString())
+                    if (o.ToString() == ((Fresh)e2.X).Value.ToString())
                     {
                         return new Expression(e1.Entity, new Belives(), new Fresh(new Message(message, true)));
                     }

@@ -21,6 +21,7 @@ namespace BanCheckerWPF
         public BanRules BanRules = new BanRules();
         public ExpressionComparer Ec = new ExpressionComparer();
         public HashSet<Expression> WorkingList;
+        public List<int> ForPrint = new List<int>();
         public MainWindow()
         {
             InitialAssumtionsCollection = new ObservableCollection<Expression>();

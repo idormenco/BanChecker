@@ -3,15 +3,15 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         ResizeMode="NoResize"
-        Title="BAN Checker Dormenco-Manoli" Height="600" Width="800">
+        Title="BAN Checker Dormenco-Manoli" Height="600" Width="875">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="300" ></RowDefinition>
             <RowDefinition Height="300"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="400"></ColumnDefinition>
-            <ColumnDefinition Width="400"></ColumnDefinition>
+            <ColumnDefinition Width="425"></ColumnDefinition>
+            <ColumnDefinition Width="450"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Border BorderBrush="Black" Grid.Row="0" Grid.Column="0" BorderThickness="1">
             <StackPanel Orientation="Vertical" Margin="2" >
@@ -25,7 +25,7 @@
                     </DataGrid.Columns>
                 </DataGrid>
                 <StackPanel Orientation="Horizontal">
-                    <TextBox Width="285" Height="30" Margin="2" BorderBrush="DimGray" Name="NewAssumtion"/>
+                    <TextBox Width="305" Height="30" Margin="2" BorderBrush="DimGray" Name="NewAssumtion"/>
                     <Button Name="AddAssumtion" Height="30" Width="50" Margin="0 0 0 0" Click="AddAssumtion_OnClick">Add</Button>
                     <Button Name="DeleteAssumtion" Height="30" Width="50" Margin="5 0 0 0" Click="DeleteAssumtion_OnClick">Delete</Button>
                 </StackPanel>
@@ -43,7 +43,7 @@
                     </DataGrid.Columns>
                 </DataGrid>
                 <StackPanel Orientation="Horizontal">
-                    <TextBox Width="280" Height="30" Margin="2" BorderBrush="DimGray" Name="NewProtocolStep"/>
+                    <TextBox Width="325" Height="30" Margin="2" BorderBrush="DimGray" Name="NewProtocolStep"/>
                     <Button Name="AddProtocolStep" Height="30" Width="50" Margin="0 0 0 0" Click="AddProtocolStep_OnClick">Add</Button>
                     <Button Name="DeleteProtocolStep" Height="30" Width="45" Margin="5 0 0 0" Click="DeleteProtocolStep_OnClick">Delete</Button>
                 </StackPanel>
@@ -56,6 +56,18 @@
             </Grid.ColumnDefinitions>
             <TextBox Name="Output" Grid.Column="0" IsReadOnly="True" Margin="10,0,0,50" VerticalScrollBarVisibility="Visible"/>
             <Button Height="30" Name="Work" Grid.Column="1" Margin="5,220,20,50" Click="Work_OnClick">Work</Button>
+            <StackPanel Orientation="Vertical" Grid.Column="1">
+                <CheckBox Name="AutentificareMutuala" Margin="5 5 0 0">Autentificare mutuala</CheckBox>
+                <CheckBox Name="SchimbDeChei" Margin="5 5 0 0">Schimb de chei</CheckBox>
+                <StackPanel Orientation="Horizontal">
+                    <Label Margin="5 5 0 0">Entity 1:</Label>
+                    <TextBox Margin="5 5 0 0" Width="30" Name="E1">A</TextBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Margin="5 5 0 0">Entity 1:</Label>
+                    <TextBox Margin="5 5 0 0" Width="30" Name="E2">B</TextBox>
+                </StackPanel>
+            </StackPanel>
 
         </Grid>
 
