@@ -20,6 +20,8 @@ namespace BanCheckerWPF
         public ObservableCollection<Expression> AnnotatedProtocolCollection { get; set; }
         public BanRules BanRules = new BanRules();
         public ExpressionComparer Ec = new ExpressionComparer();
+        public HSComparer HsComparer = new HSComparer();
+        public HashSet<HashSet<string>> forPrint;
         public HashSet<Expression> WorkingList;
         public MainWindow()
         {
@@ -34,6 +36,7 @@ namespace BanCheckerWPF
             InitialAssumtionsCollection.Add(new Expression(new Step(7), "A", new Belives(), new Fresh(new Nonce("na"))));
             InitialAssumtionsCollection.Add(new Expression(new Step(8), "B", new Belives(), new Fresh(new Nonce("nb"))));
             WorkingList=new HashSet<Expression>(Ec);
+            forPrint = new HashSet<HashSet<string>>(HsComparer);
             InitializeComponent();
             InitialAssumtions.DataContext = InitialAssumtionsCollection;
             AnnotatedProtocol.DataContext = AnnotatedProtocolCollection;
@@ -263,11 +266,8 @@ namespace BanCheckerWPF
             {
                 return null;
             }
-            else
-            {
-                e.X = x;
-                return e;
-            }
+            e.X = x;
+            return e;
         }
 
         public EncryptedMessage ParseEncryptedMessage(string s)
@@ -404,6 +404,7 @@ namespace BanCheckerWPF
         private void Work_OnClick(object sender, RoutedEventArgs e)
         {
             WorkingList.Clear();
+            forPrint.Clear();
             Output.Text = "";
             if (InitialAssumtionsCollection.Count == 0 || AnnotatedProtocolCollection.Count == 0)
             {
@@ -415,7 +416,6 @@ namespace BanCheckerWPF
                 {
                     WorkingList.Add(expression);
                 }
-                //MessageBox.Show(WorkingList.Count.ToString());
                 foreach (var expression in AnnotatedProtocolCollection)
                 {
                     WorkingList.Add(expression);
@@ -425,38 +425,51 @@ namespace BanCheckerWPF
                         var auxList = WorkingList.ToList();
                         for (int i = 0; i < auxList.Count; i++)
                         {
+                            var rls = new HashSet<string>();
                             var result = BanRules.ApplyRule(auxList[i], null);
-                            
                             if (result.Count != 0)
                             {
+                                
                                 int count = WorkingList.Count;
                                 foreach (var exp in result)
                                 {
+                                    int k = WorkingList.Count;
                                     WorkingList.Add(exp);
+
+                                    if (k < WorkingList.Count) { rls.Add("Auto:" + auxList[i]); rls.Add(exp.ToString()); }
                                 }
                                 if (count != WorkingList.Count)
                                 {
-                                    check = true;       
+                                    check = true;
                                 }
+                                
                             }
+
+                            forPrint.Add(rls);
                         }
                         for (int i = 0; i < auxList.Count-1; i++)
                         {
                             for (int j = i+1; j < auxList.Count; j++)
                             {
+                                var rls = new HashSet<string>();
                                 var result = BanRules.ApplyRule(auxList[i], auxList[j]);
                                 if (result.Count != 0)
                                 {
+                                    
                                     var count = WorkingList.Count;
+                                    
                                     foreach (var exp in result)
                                     {
+                                        int k = WorkingList.Count;
                                         WorkingList.Add(exp);
+                                        if (k < WorkingList.Count) { rls.Add(auxList[i] + "  +  " + auxList[j]); rls.Add(exp.ToString()); }
                                     }
                                     if (count != WorkingList.Count)
                                     {
                                         check = true;
                                     }
-                                }   
+                                }
+                                forPrint.Add(rls);
                             }
                         }
 
@@ -466,14 +479,47 @@ namespace BanCheckerWPF
                         }
                     }
                     Output.Text = "";
-                    foreach (var expression1 in WorkingList)
+                    foreach (var hashSet in forPrint)
                     {
-                        Output.Text += expression1 + "\n";
+                        foreach (var exprString in hashSet)
+                        {
+                            Output.Text += exprString + "\n";
+                        }
+                        Output.Text += "-----------------------------\n";
                     }
+                    Output.Text += "=============================";
 
                 }
-
             }
+        }
+    }
+
+    public class HSComparer : IEqualityComparer<HashSet<string>>
+    {
+        public bool Equals(HashSet<string> x, HashSet<string> y)
+        {
+            if (x.Count!=y.Count)
+            {
+                return false;
+            }
+            string[] xArr = x.ToArray();
+            string[] yArr = y.ToArray();
+            int k = 0;
+            for (int i = 0; i < xArr.Length; i++)
+            {
+                if (String.Compare(xArr[i], yArr[i], StringComparison.Ordinal)!=0) return false;
+                k++;
+            }
+            if (k==xArr.Length)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public int GetHashCode(HashSet<string> obj)
+        {
+            return -1;
         }
     }
 }

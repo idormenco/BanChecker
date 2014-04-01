@@ -4,7 +4,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         ResizeMode="NoResize"
         Icon="icon.ico"
-        Title="BAN Checker Dormenco-Manoli" Height="600" Width="800">
+        Title="BAN Checker Dormenco-Manoli" Height="620" Width="850">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="300" ></RowDefinition>
@@ -55,10 +55,10 @@
         <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="690"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="160"/>
             </Grid.ColumnDefinitions>
             <TextBox Name="Output" Grid.Column="0" IsReadOnly="True" Margin="10,0,0,50" VerticalScrollBarVisibility="Visible"/>
-            <Button Height="30" Name="Work" Grid.Column="1" Margin="5,220,20,50" Click="Work_OnClick">Work</Button>
+            <Button Height="30" Name="Work" Grid.Column="1" Margin="5,220,24,50" Click="Work_OnClick">Work</Button>
             <StackPanel Orientation="Vertical" Grid.Column="1">
                 <CheckBox Name="AutentificareMutuala" Margin="5 5 0 0">Autentificare mutuala</CheckBox>
                 <CheckBox Name="SchimbDeChei" Margin="5 5 0 0">Schimb de chei</CheckBox>
