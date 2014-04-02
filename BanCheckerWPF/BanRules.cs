@@ -8,30 +8,41 @@ namespace BanCheckerWPF
         public List<Expression> ApplyRule(Expression expression1, Expression expression2)
         {
             var result = new List<Expression>();
-            if (MessageMeaning(expression1, expression2) != null)
+
+            var messageMeaningResult = MessageMeaning(expression1, expression2);
+            if (messageMeaningResult != null)
             {
-                result.AddRange(MessageMeaning(expression1, expression2));
-            }
-            if (NonceVerification(expression1, expression2) != null)
-            {
-                result.Add(NonceVerification(expression1, expression2));
+                result.AddRange(messageMeaningResult);
             }
 
-            if (Jurisdiction(expression1, expression2) != null)
+            var nonceVerificationResult = NonceVerification(expression1, expression2);
+            if (nonceVerificationResult != null)
             {
-                result.Add(Jurisdiction(expression1, expression2));
+                result.Add(nonceVerificationResult);
             }
-            if (BeliefConjuncatenation(expression1, expression2) != null)
+
+            var jurisdictionResult = Jurisdiction(expression1, expression2);
+            if (jurisdictionResult != null)
             {
-                result.AddRange(BeliefConjuncatenation(expression1, expression2));
+                result.Add(jurisdictionResult);
             }
+
+            var beliefConjucatenationResult = BeliefConjuncatenation(expression1, expression2);
+
+            if (beliefConjucatenationResult != null)
+            {
+                result.AddRange(beliefConjucatenationResult);
+            }
+
             //if (ReceivingRule(expression1, expression2) != null)
             //{
             //    result.AddRange(ReceivingRule(expression1, expression2));
             //}
-            if (FreshnessConjuncatenation(expression1, expression2) != null)
+
+            var freshnessConjucatenationResult = FreshnessConjuncatenation(expression1, expression2);
+            if (freshnessConjucatenationResult != null)
             {
-                result.Add(FreshnessConjuncatenation(expression1, expression2));
+                result.Add(freshnessConjucatenationResult);
             }
             return result;
         }
