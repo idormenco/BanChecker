@@ -420,9 +420,12 @@ namespace BanCheckerWPF
                 {
                     WorkingList.Add(expression);
                 }
+                int save = -1;
+
                 foreach (var expression in AnnotatedProtocolCollection)
                 {
                     eNo++;
+                    int hsCount = forPrint.Count;
                     WorkingList.Add(expression);
                     while (true)
                     {
@@ -485,6 +488,7 @@ namespace BanCheckerWPF
                     }
                     Output.Text = "";
                     forPrint.Add(new HashSet<string>() { "=========================" + addSpace(eNo) });
+
                     int hsPosition = 0;
                     Output.Text += "*************************************\n";
                     Output.Text += "**             Initial Assumtions         **\n";
@@ -503,8 +507,89 @@ namespace BanCheckerWPF
                         }
                         if (hsPosition != forPrint.Count) { Output.Text += "-----------------------------\n"; }
                     }
-
+                    if (forPrint.Count - hsCount < 2)
+                    {
+                        save = eNo;
+                        break;
+                    }
                 }
+                if (save != -1)
+                {
+                    MessageBox.Show(
+                        "No new rulles are obtained please check your protocol possible problems in this rule:\n" +
+                        AnnotatedProtocolCollection[save-1].ToString());
+                }
+                else
+                {
+                    if (E1.Text == "" || E2.Text == "" || MutualKey.Text == "")
+                    {
+                        MessageBox.Show("Insert 2 entities and a mutual key!");
+                    }
+                    else
+                    {
+                        
+                        var key = new Key(MutualKey.Text,E1.Text,E2.Text);
+                        var exp1 = new Expression(E1.Text, new Belives(), key);
+                        var exp2 = new Expression(E2.Text, new Belives(), key);
+                        var exp3 = new Expression(E1.Text, new Belives(), exp2);
+                        var exp4 = new Expression(E2.Text, new Belives(), exp1);
+                        bool b1 = false, b2 = false, b3 = false, b4 = false;
+                        if (AutentificareMutuala.IsChecked == true || SchimbDeChei.IsChecked == true)
+                        {
+                            Output.Text += "***************************\n";
+                            Output.Text += "**           Results           **\n";
+                            Output.Text += "***************************\n";
+
+                        }
+                        foreach (var hset in forPrint)
+                        {
+                            foreach (var row in hset)
+                            {
+                                if (String.Compare(row, exp1.ToString(), StringComparison.Ordinal) == 0)
+                                {
+                                    b1 = true;
+                                }
+                                if (String.Compare(row, exp2.ToString(), StringComparison.Ordinal) == 0)
+                                {
+                                    b2 = true;
+                                }
+                                if (String.Compare(row, exp3.ToString(), StringComparison.Ordinal) == 0)
+                                {
+                                    b3 = true;
+                                }
+                                if (String.Compare(row, exp4.ToString(), StringComparison.Ordinal) == 0)
+                                {
+                                    b4 = true;
+                                }
+                            }
+                        if (AutentificareMutuala.IsChecked == true)
+                        {                            
+                            }
+                            if (b1 && b2 == true)
+                            {
+                                Output.Text += "(+)Protocolul asigura autentificare mutuala\n";
+                            }
+                            else
+                            {
+                                Output.Text += "(-)Protocolul nu asigura autentificare mutuala\n";
+                            }
+
+
+                        }
+                        if (SchimbDeChei.IsChecked == true)
+                        {
+                            if (b3 && b4 == true)
+                            {
+                                Output.Text += "(+)Protocolul asigura schimb de chei\n";
+                            }
+                            else
+                            {
+                                Output.Text += "(-)Protocolul nu asigura schimb de chei\n";
+                            }
+                        }
+                    }
+                }
+
             }
         }
 
