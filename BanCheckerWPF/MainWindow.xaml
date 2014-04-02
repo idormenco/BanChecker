@@ -60,15 +60,19 @@
             <TextBox Name="Output" Grid.Column="0" IsReadOnly="True" Margin="10,0,0,50" VerticalScrollBarVisibility="Visible"/>
             <Button Height="30" Name="Work" Grid.Column="1" Margin="5,220,24,50" Click="Work_OnClick">Work</Button>
             <StackPanel Orientation="Vertical" Grid.Column="1">
-                <CheckBox Name="AutentificareMutuala" Margin="5 5 0 0">Autentificare mutuala</CheckBox>
+                <CheckBox Name="AutentificareMutuala" Margin="5 5 0 0" IsChecked="True">Autentificare mutuala</CheckBox>
                 <CheckBox Name="SchimbDeChei" Margin="5 5 0 0">Schimb de chei</CheckBox>
                 <StackPanel Orientation="Horizontal">
                     <Label Margin="5 5 0 0">Entity 1:</Label>
                     <TextBox Margin="5 5 0 0" Width="30" Name="E1">A</TextBox>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <Label Margin="5 5 0 0">Entity 1:</Label>
-                    <TextBox Margin="5 5 0 0" Width="30" Name="E2">B</TextBox>
+                    <Label Margin="5 5 0 0">Entity 2:</Label>
+                    <TextBox Margin="5 5 0 0" Width="30" x:Name="E2" Text="B"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Margin="5 5 0 0">Mutual Key:</Label>
+                    <TextBox Margin="5 5 0 0" Width="30" Name="MutualKey">kAB</TextBox>
                 </StackPanel>
             </StackPanel>
 

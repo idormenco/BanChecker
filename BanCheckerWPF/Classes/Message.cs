@@ -30,9 +30,9 @@ namespace BanCheckerWPF.Classes
 
         public override string ToString()
         {
-            var ret = MessageList.Aggregate("(", (current, o) => current + (o.ToString() + ","));
+            var ret = MessageList.Aggregate("[", (current, o) => current + (o.ToString() + ","));
             ret = ret.Substring(0, ret.Length - 1);
-            ret += ")";
+            ret += "]";
             return ret;
         }
     }

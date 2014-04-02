@@ -27,7 +27,7 @@ namespace BanCheckerWPF
         {
             InitialAssumtionsCollection = new ObservableCollection<Expression>();
             AnnotatedProtocolCollection = new ObservableCollection<Expression>();
-            InitialAssumtionsCollection.Add(new Expression(new Step(1), "A",new Belives(), new Key("kAS","A","S")));
+            InitialAssumtionsCollection.Add(new Expression(new Step(1), "A", new Belives(), new Key("kAS", "A", "S")));
             InitialAssumtionsCollection.Add(new Expression(new Step(2), "B", new Belives(), new Key("kBS", "B", "S")));
             InitialAssumtionsCollection.Add(new Expression(new Step(3), "A", new Belives(), new Expression("S", new Controls(), new Key("kAB", "A", "B"))));
             InitialAssumtionsCollection.Add(new Expression(new Step(4), "B", new Belives(), new Expression("S", new Controls(), new Key("kAB", "A", "B"))));
@@ -35,7 +35,7 @@ namespace BanCheckerWPF
             InitialAssumtionsCollection.Add(new Expression(new Step(6), "B", new Belives(), new Expression("S", new Controls(), new Fresh(new Key("kAB", "A", "B")))));
             InitialAssumtionsCollection.Add(new Expression(new Step(7), "A", new Belives(), new Fresh(new Nonce("na"))));
             InitialAssumtionsCollection.Add(new Expression(new Step(8), "B", new Belives(), new Fresh(new Nonce("nb"))));
-            WorkingList=new HashSet<Expression>(Ec);
+            WorkingList = new HashSet<Expression>(Ec);
             forPrint = new HashSet<HashSet<string>>(HsComparer);
             InitializeComponent();
             InitialAssumtions.DataContext = InitialAssumtionsCollection;
@@ -65,6 +65,7 @@ namespace BanCheckerWPF
             if (text == "") MessageBox.Show("Please insert an assumtion!");
             else
             {
+                NewAssumtion.Text = "";
                 var split = text.Split(' ');
                 // if text is composed from less than 3 tokens displays an error message and exit function
                 if (split.Length < 3)
@@ -81,10 +82,10 @@ namespace BanCheckerWPF
                 else
                 {
                     object x;
-                    
+
                     //getting the start position of object
                     int objectStartPosition = split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1;
-                    
+
                     //checking if object exists.
                     //if not exit with user warning.
                     if (objectStartPosition > text.Length)
@@ -153,7 +154,7 @@ namespace BanCheckerWPF
             if (s == "") return null;
             return new Nonce(s);
         }
-        
+
         public Message ParseMessage(string s)
         {
             //TODO: add verifications
@@ -195,6 +196,7 @@ namespace BanCheckerWPF
             }
             return mes;
         }
+
         public Fresh ParseFresh(string s)
         {
             if (s == "") return null;
@@ -332,6 +334,7 @@ namespace BanCheckerWPF
             if (text == "") MessageBox.Show("Completati toate campurile!!");
             else
             {
+                NewProtocolStep.Text = "";
                 var split = text.Split(' ');
                 int objectStartPosition = split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1;
                 if (objectStartPosition > text.Length)
@@ -412,12 +415,14 @@ namespace BanCheckerWPF
             }
             else
             {
+                int eNo = 0;
                 foreach (var expression in InitialAssumtionsCollection)
                 {
                     WorkingList.Add(expression);
                 }
                 foreach (var expression in AnnotatedProtocolCollection)
                 {
+                    eNo++;
                     WorkingList.Add(expression);
                     while (true)
                     {
@@ -429,7 +434,7 @@ namespace BanCheckerWPF
                             var result = BanRules.ApplyRule(auxList[i], null);
                             if (result.Count != 0)
                             {
-                                
+
                                 int count = WorkingList.Count;
                                 foreach (var exp in result)
                                 {
@@ -442,22 +447,22 @@ namespace BanCheckerWPF
                                 {
                                     check = true;
                                 }
-                                
+
                             }
 
-                            forPrint.Add(rls);
+                            if (rls.Count != 0) { forPrint.Add(rls); }
                         }
-                        for (int i = 0; i < auxList.Count-1; i++)
+                        for (int i = 0; i < auxList.Count - 1; i++)
                         {
-                            for (int j = i+1; j < auxList.Count; j++)
+                            for (int j = i + 1; j < auxList.Count; j++)
                             {
                                 var rls = new HashSet<string>();
                                 var result = BanRules.ApplyRule(auxList[i], auxList[j]);
                                 if (result.Count != 0)
                                 {
-                                    
+
                                     var count = WorkingList.Count;
-                                    
+
                                     foreach (var exp in result)
                                     {
                                         int k = WorkingList.Count;
@@ -469,7 +474,7 @@ namespace BanCheckerWPF
                                         check = true;
                                     }
                                 }
-                                forPrint.Add(rls);
+                                if (rls.Count != 0) { forPrint.Add(rls); }
                             }
                         }
 
@@ -479,18 +484,38 @@ namespace BanCheckerWPF
                         }
                     }
                     Output.Text = "";
+                    forPrint.Add(new HashSet<string>() { "=========================" + addSpace(eNo) });
+                    int hsPosition = 0;
+                    Output.Text += "*************************************\n";
+                    Output.Text += "**             Initial Assumtions         **\n";
+                    Output.Text += "*************************************\n";
+                    foreach (var expression1 in InitialAssumtionsCollection)
+                    {
+                        Output.Text += expression1.ToString() + "\n";
+                    }
+                    Output.Text += "+++++++++++++++++++++++++++++++++\n";
                     foreach (var hashSet in forPrint)
                     {
+                        hsPosition++;
                         foreach (var exprString in hashSet)
                         {
                             Output.Text += exprString + "\n";
                         }
-                        Output.Text += "-----------------------------\n";
+                        if (hsPosition != forPrint.Count) { Output.Text += "-----------------------------\n"; }
                     }
-                    Output.Text += "=============================";
 
                 }
             }
+        }
+
+        private string addSpace(int eNo)
+        {
+            string s = "";
+            for (int i = 0; i < eNo; i++)
+            {
+                s += " ";
+            }
+            return s;
         }
     }
 
@@ -498,7 +523,7 @@ namespace BanCheckerWPF
     {
         public bool Equals(HashSet<string> x, HashSet<string> y)
         {
-            if (x.Count!=y.Count)
+            if (x.Count != y.Count)
             {
                 return false;
             }
@@ -507,10 +532,10 @@ namespace BanCheckerWPF
             int k = 0;
             for (int i = 0; i < xArr.Length; i++)
             {
-                if (String.Compare(xArr[i], yArr[i], StringComparison.Ordinal)!=0) return false;
+                if (String.Compare(xArr[i], yArr[i], StringComparison.Ordinal) != 0) return false;
                 k++;
             }
-            if (k==xArr.Length)
+            if (k == xArr.Length)
             {
                 return true;
             }
