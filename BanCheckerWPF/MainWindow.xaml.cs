@@ -517,7 +517,7 @@ namespace BanCheckerWPF
                 {
                     MessageBox.Show(
                         "No new rulles are obtained please check your protocol possible problems in this rule:\n" +
-                        AnnotatedProtocolCollection[save-1].ToString());
+                        AnnotatedProtocolCollection[save - 1].ToString());
                 }
                 else
                 {
@@ -527,8 +527,8 @@ namespace BanCheckerWPF
                     }
                     else
                     {
-                        
-                        var key = new Key(MutualKey.Text,E1.Text,E2.Text);
+
+                        var key = new Key(MutualKey.Text, E1.Text, E2.Text);
                         var exp1 = new Expression(E1.Text, new Belives(), key);
                         var exp2 = new Expression(E2.Text, new Belives(), key);
                         var exp3 = new Expression(E1.Text, new Belives(), exp2);
@@ -562,19 +562,18 @@ namespace BanCheckerWPF
                                     b4 = true;
                                 }
                             }
+
+                        }
                         if (AutentificareMutuala.IsChecked == true)
-                        {                            
-                            }
-                            if (b1 && b2 == true)
-                            {
-                                Output.Text += "(+)Protocolul asigura autentificare mutuala\n";
-                            }
-                            else
-                            {
-                                Output.Text += "(-)Protocolul nu asigura autentificare mutuala\n";
-                            }
-
-
+                        {
+                        }
+                        if (b1 && b2 == true)
+                        {
+                            Output.Text += "(+)Protocolul asigura autentificare mutuala\n";
+                        }
+                        else
+                        {
+                            Output.Text += "(-)Protocolul nu asigura autentificare mutuala\n";
                         }
                         if (SchimbDeChei.IsChecked == true)
                         {
