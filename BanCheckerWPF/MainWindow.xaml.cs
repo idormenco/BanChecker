@@ -27,14 +27,14 @@ namespace BanCheckerWPF
         {
             InitialAssumtionsCollection = new ObservableCollection<Expression>();
             AnnotatedProtocolCollection = new ObservableCollection<Expression>();
-            InitialAssumtionsCollection.Add(new Expression(new Step(1), "A", new Belives(), new Key("kAS", "A", "S")));
-            InitialAssumtionsCollection.Add(new Expression(new Step(2), "B", new Belives(), new Key("kBS", "B", "S")));
-            InitialAssumtionsCollection.Add(new Expression(new Step(3), "A", new Belives(), new Expression("S", new Controls(), new Key("kAB", "A", "B"))));
-            InitialAssumtionsCollection.Add(new Expression(new Step(4), "B", new Belives(), new Expression("S", new Controls(), new Key("kAB", "A", "B"))));
-            InitialAssumtionsCollection.Add(new Expression(new Step(5), "A", new Belives(), new Expression("S", new Controls(), new Fresh(new Key("kAB", "A", "B")))));
-            InitialAssumtionsCollection.Add(new Expression(new Step(6), "B", new Belives(), new Expression("S", new Controls(), new Fresh(new Key("kAB", "A", "B")))));
-            InitialAssumtionsCollection.Add(new Expression(new Step(7), "A", new Belives(), new Fresh(new Nonce("na"))));
-            InitialAssumtionsCollection.Add(new Expression(new Step(8), "B", new Belives(), new Fresh(new Nonce("nb"))));
+            InitialAssumtionsCollection.Add(new Expression("A", new Belives(), new Key("kAS", "A", "S")));
+            InitialAssumtionsCollection.Add(new Expression("B", new Belives(), new Key("kBS", "B", "S")));
+            InitialAssumtionsCollection.Add(new Expression("A", new Belives(), new Expression("S", new Controls(), new Key("kAB", "A", "B"))));
+            InitialAssumtionsCollection.Add(new Expression("B", new Belives(), new Expression("S", new Controls(), new Key("kAB", "A", "B"))));
+            InitialAssumtionsCollection.Add(new Expression("A", new Belives(), new Expression("S", new Controls(), new Fresh(new Key("kAB", "A", "B")))));
+            InitialAssumtionsCollection.Add(new Expression("B", new Belives(), new Expression("S", new Controls(), new Fresh(new Key("kAB", "A", "B")))));
+            InitialAssumtionsCollection.Add(new Expression("A", new Belives(), new Fresh(new Nonce("na"))));
+            InitialAssumtionsCollection.Add(new Expression("B", new Belives(), new Fresh(new Nonce("nb"))));
             WorkingList = new HashSet<Expression>(Ec);
             forPrint = new HashSet<HashSet<string>>(HsComparer);
             InitializeComponent();
