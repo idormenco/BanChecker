@@ -566,15 +566,16 @@ namespace BanCheckerWPF
                         }
                         if (AutentificareMutuala.IsChecked == true)
                         {
+                            if (b1 && b2 == true)
+                            {
+                                Output.Text += "(+)Protocolul asigura autentificare mutuala\n";
+                            }
+                            else
+                            {
+                                Output.Text += "(-)Protocolul nu asigura autentificare mutuala\n";
+                            }
                         }
-                        if (b1 && b2 == true)
-                        {
-                            Output.Text += "(+)Protocolul asigura autentificare mutuala\n";
-                        }
-                        else
-                        {
-                            Output.Text += "(-)Protocolul nu asigura autentificare mutuala\n";
-                        }
+                        
                         if (SchimbDeChei.IsChecked == true)
                         {
                             if (b3 && b4 == true)
